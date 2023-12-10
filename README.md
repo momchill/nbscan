@@ -22,10 +22,10 @@ Usage: nbscan [options] <net to scan> ...
 Options:
 	-json	Output json format
 	-m   	Print MAC address
-	-q	 	Suppress error messages
+	-q    	Suppress error messages
 	-r   	Set the maximum packets per second rate. 0 disables rate limiter (default 250)
 	-t   	Set the maximum timeout / wait time for response in seconds (default 1)
-	-v	 	Log more info to stderr
+	-v    	Log more info to stderr
 ```
 	
 ### Local Network Discovery
