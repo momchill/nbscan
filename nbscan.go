@@ -5,7 +5,7 @@ import (
 	"net"
 	"time"
 	"os"
-//	"syscall"
+	"syscall"
 	"flag"
 	"strings"
 	"errors"
@@ -242,29 +242,29 @@ func parseReply(bbuff []byte, result *NBResult) uint16 {
 }
 
 
-//func initWindows() {
-//	stdout := syscall.Handle(os.Stdout.Fd())
-//	stderr := syscall.Handle(os.Stdout.Fd())
-//	
-//	var originalMode uint32
-//
-//	syscall.GetConsoleMode(stdout, &originalMode)
-//	originalMode |= 0x0004
-//	
-//	syscall.MustLoadDLL("kernel32").MustFindProc("SetConsoleMode").Call(uintptr(stdout), uintptr(originalMode))
-//
-//	syscall.GetConsoleMode(stderr, &originalMode)
-//	originalMode |= 0x0004
-//	
-//	syscall.MustLoadDLL("kernel32").MustFindProc("SetConsoleMode").Call(uintptr(stderr), uintptr(originalMode))
-//}
+func initWindows() {
+	stdout := syscall.Handle(os.Stdout.Fd())
+	stderr := syscall.Handle(os.Stdout.Fd())
+	
+	var originalMode uint32
+
+	syscall.GetConsoleMode(stdout, &originalMode)
+	originalMode |= 0x0004
+	
+	syscall.MustLoadDLL("kernel32").MustFindProc("SetConsoleMode").Call(uintptr(stdout), uintptr(originalMode))
+
+	syscall.GetConsoleMode(stderr, &originalMode)
+	originalMode |= 0x0004
+	
+	syscall.MustLoadDLL("kernel32").MustFindProc("SetConsoleMode").Call(uintptr(stderr), uintptr(originalMode))
+}
 
 var verbose *bool
 var quite   *bool
 var json    *bool
 
 func main() {
-	//initWindows()
+	initWindows()
 	flag.Usage = func() {
 		fmt.Println("NBScan v1.0. Scan a list of networks for NetBIOS information")
 		fmt.Println("")
@@ -373,7 +373,6 @@ func main() {
 			}
 
 			if msDelay > 0 {
-				//var msPassed = -lastSent.Sub(time.Now()).Milliseconds()
 				var msPassed = time.Now().Sub(lastSent).Milliseconds()
 				if msPassed < msDelay {
 					// 10ms correction to compensate this if block
@@ -391,7 +390,7 @@ func main() {
 		}
 	}()
 
-	for time.Now().Sub(lastComm).Milliseconds() > 1000 * int64(*timeout) {
+	for time.Now().Sub(lastComm).Milliseconds() < 1000 * int64(*timeout) {
 		time.Sleep(time.Second)
 	}
 	socket.Close()
